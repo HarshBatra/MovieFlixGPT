@@ -1,6 +1,11 @@
 import React, { useState, useRef } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -10,17 +15,46 @@ const Login = () => {
     setIsSignInForm(!isSignInForm);
   };
 
-  const email = useRef(null);
-  const password = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
 
   const handleOnClick = () => {
     // Validate email and password
-
     // console.log(email.current.value);
     // console.log(password.current.value);
-    const message = checkValidData(email.current.value, password.current.value);
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const message = checkValidData(email, password);
     // console.log(message);
     setErrorMsg(message);
+    if (message) return;
+
+    // sign-in / sign-up logic
+    if (!isSignInForm) {
+      // sign up
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          // console.log(user);
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          setErrorMsg(errorMessage);
+        });
+    } else {
+      // sign in
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // console.log(user);
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          setErrorMsg(errorMessage);
+        });
+    }
   };
   return (
     <div className="">
@@ -45,13 +79,13 @@ const Login = () => {
           <input type="text" placeholder="Name" className="p-2 m-2" />
         )}
         <input
-          ref={email}
+          ref={emailRef}
           type="text"
           placeholder="Email"
           className="p-2 m-2"
         />
         <input
-          ref={password}
+          ref={passwordRef}
           type="password"
           placeholder="Password"
           className="p-2 m-2"
