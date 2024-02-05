@@ -4,24 +4,31 @@ import { checkValidData } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const nameRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
 
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-
   const handleOnClick = () => {
     // Validate email and password
-    // console.log(email.current.value);
-    // console.log(password.current.value);
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const message = checkValidData(email, password);
@@ -37,6 +44,24 @@ const Login = () => {
           // Signed up
           const user = userCredential.user;
           // console.log(user);
+          updateProfile(user, {
+            displayName: nameRef.current.value,
+          })
+            .then(() => {
+              const { uid, displayName, email } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  name: displayName,
+                  email: email,
+                })
+              );
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMsg(error.message);
+            });
+          navigate("/browse");
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -49,6 +74,7 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           // console.log(user);
+          navigate("/browse");
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -56,6 +82,7 @@ const Login = () => {
         });
     }
   };
+
   return (
     <div className="">
       <Header />
@@ -76,7 +103,12 @@ const Login = () => {
           {isSignInForm ? "Sign-in" : "Sign-up"}
         </div>
         {!isSignInForm && (
-          <input type="text" placeholder="Name" className="p-2 m-2" />
+          <input
+            ref={nameRef}
+            type="text"
+            placeholder="Name"
+            className="p-2 m-2"
+          />
         )}
         <input
           ref={emailRef}
