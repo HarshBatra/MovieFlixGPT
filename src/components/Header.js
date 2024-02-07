@@ -49,21 +49,21 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="absolute flex justify-between items-center w-full px-10 py-6 bg-gradient-to-b from-black z-10">
+    <div className="flex justify-between items-center w-screen px-4 md:px-10 py-6 bg-gradient-to-b from-black z-10 text-sm md:text-base fixed">
       <img
         alt="logo"
         src={require("../assets/logo")}
-        className="w-44 drop-shadow-lg"
+        className="md:w-44 w-1/4 drop-shadow-lg"
       />
       {user && (
         <div className="text-white flex gap-6 items-center">
           <div className="flex flex-col items-center">
-            <FaCircleUser className="w-5 h-5" />
+            <FaCircleUser className="md:w-5 md:h-5" />
             <div>{user.name}</div>
           </div>
           <div
             onClick={handleSignOut}
-            className="flex gap-2 items-center bg-red-600 px-4 py-2 cursor-pointer hover:bg-white hover:text-red-600"
+            className="flex gap-2 items-center bg-red-600 md:px-4 md:py-2 p-2 cursor-pointer hover:bg-white hover:text-red-600"
           >
             Sign Out <FaSignOutAlt />
           </div>
