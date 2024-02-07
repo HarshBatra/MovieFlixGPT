@@ -49,7 +49,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="flex justify-between items-center w-screen px-4 md:px-10 py-6 bg-gradient-to-b from-black z-10 text-sm md:text-base fixed">
+    <div className="flex justify-between items-center w-screen px-4 md:px-10 py-6 bg-gradient-to-b from-black z-50 text-sm md:text-base fixed">
       <img
         alt="logo"
         src={require("../assets/logo")}
