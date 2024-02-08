@@ -10,7 +10,7 @@ const GptSearchBar = () => {
 
   const gptQuery =
     "Act as a Movie Recommendation System and suggest some movies for the query: " +
-    searchText.current.value +
+    searchText?.current?.value +
     ". Only give me names of 5 movies, comma separated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
 
   const fetchMovieTMDB = async (movie) => {
@@ -19,6 +19,7 @@ const GptSearchBar = () => {
       options
     );
     const data = await res.json();
+    // console.log(data?.results);
     return data?.results;
   };
 
