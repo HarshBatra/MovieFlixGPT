@@ -3,6 +3,7 @@ import { img_cdn } from "../utils/constants";
 
 const MovieCard = ({ movie, poster }) => {
   //   console.log(movie);
+  if (!movie?.backdrop_path || !movie?.poster_path) return null;
   return (
     <>
       {!poster ? (

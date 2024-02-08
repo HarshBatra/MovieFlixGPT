@@ -9,11 +9,17 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
+import { toggleGptSearchView } from "../utils/gptSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+
+  const handleGptSearch = () => {
+    dispatch(toggleGptSearchView());
+  };
 
   const handleSignOut = () => {
     signOut(auth)
@@ -56,14 +62,20 @@ const Header = () => {
         className="md:w-44 w-1/4 drop-shadow-lg"
       />
       {user && (
-        <div className="text-white flex gap-6 items-center">
+        <div className="text-white flex md:gap-6 gap-4 text-xs md:text-base items-center drop-shadow-lg">
+          <div
+            onClick={handleGptSearch}
+            className="bg-red-600 p-2 md:px-4  cursor-pointer hover:bg-white hover:text-red-600"
+          >
+            {showGptSearch ? "Home" : "GPT✨"}
+          </div>
           <div className="flex flex-col items-center">
             <FaCircleUser className="md:w-5 md:h-5" />
             <div>{user.name}</div>
           </div>
           <div
             onClick={handleSignOut}
-            className="flex gap-2 items-center bg-red-600 md:px-4 md:py-2 p-2 cursor-pointer hover:bg-white hover:text-red-600"
+            className="flex gap-2 items-center bg-red-600 md:px-4 p-2 cursor-pointer hover:bg-white hover:text-red-600"
           >
             Sign Out <FaSignOutAlt />
           </div>
